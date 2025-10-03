@@ -605,12 +605,8 @@ def rate_limit(func):
     return wrapper
 
 def get_google_auth_url(state):
-    # Используем текущий хост для redirect_uri
-    if request.host_url:
-        redirect_uri = f"{request.host_url}auth/google/callback"
-    else:
-        # Fallback для Render
-        redirect_uri = "https://onion-web-root.onrender.com/auth/google/callback"
+    # Всегда используем Render домен для продакшена
+    redirect_uri = "https://onion-web-root.onrender.com/auth/google/callback"
     
     base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     params = {
@@ -625,6 +621,7 @@ def get_google_auth_url(state):
     
     param_string = "&".join([f"{k}={v}" for k, v in params.items()])
     return f"{base_url}?{param_string}"
+    
 def save_user_to_supabase(user_info, request):
     try:
         user_ip = request.remote_addr
@@ -689,6 +686,9 @@ def google_auth():
 
 @app.route('/auth/google/callback')
 def google_callback():
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        return "Google OAuth не настроен", 500
+        
     if request.args.get('state') != session.get('oauth_state'):
         return "Неверный state параметр", 400
     
@@ -697,7 +697,8 @@ def google_callback():
         return "Authorization code не получен", 400
     
     try:
-        redirect_uri = 'http://127.0.0.1:5000/auth/google/callback'
+        # Всегда используем Render домен
+        redirect_uri = "https://onion-web-root.onrender.com/auth/google/callback"
         
         token_url = "https://oauth2.googleapis.com/token"
         token_data = {
@@ -732,7 +733,7 @@ def google_callback():
         db_user = save_user_to_supabase(user_info, request)
         
         if not db_user:
-            return "Ошибка сохранения пользователя в базу данных", 500
+            return "Ошибка сохранения пользователя", 500
         
         session['user'] = {
             'id': db_user['id'],
@@ -1168,5 +1169,6 @@ if __name__ == '__main__':
     
 
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
 
