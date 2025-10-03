@@ -1119,6 +1119,9 @@ def api_user():
 
 @app.route('/admin/users')
 def admin_users():
+    if supabase is None:
+        return jsonify({'error': 'Supabase не настроен'}), 500
+        
     try:
         response = supabase.table('users').select('*').execute()
         return jsonify({
@@ -1138,11 +1141,27 @@ def serve_section_files(folder, filename):
 if __name__ == '__main__':
     print("=" * 60)
     print("🚀 Web Security Research Server")
-    print("✅ Supabase Database: CONNECTED")
-    print("✅ Google OAuth: CONFIGURED")
+    
+    if supabase:
+        print("✅ Supabase Database: CONNECTED")
+    else:
+        print("⚠️ Supabase: DEMO MODE")
+    
+    if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+        print("✅ Google OAuth: CONFIGURED")
+    else:
+        print("⚠️ Google OAuth: NOT CONFIGURED")
+    
     print("✅ OSINT Search: INTEGRATED")
-    print("🌐 Сервер запущен: http://127.0.0.1:5000")
+    print("🌐 Сервер запущен...")
     print("=" * 60)
+    
+    # Получаем порт из переменной окружения Render, или используем 5000 по умолчанию
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Запускаем на всех интерфейсах (0.0.0.0) для Render
+    app.run(debug=False, host='0.0.0.0', port=port)
     
 
     app.run(debug=True, host='0.0.0.0', port=5000)
+
