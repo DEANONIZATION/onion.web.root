@@ -9,17 +9,26 @@ import csv
 from datetime import datetime
 from flask import Flask, redirect, request, session, url_for, jsonify, send_from_directory
 from dotenv import load_dotenv
-from supabase import create_client, Client
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
-supabase: Client = create_client(
-    os.environ.get('SUPABASE_URL'),
-    os.environ.get('SUPABASE_KEY')
-)
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+
+supabase = None
+if SUPABASE_URL and SUPABASE_KEY:
+    try:
+        from supabase import create_client, Client
+        supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        print("✅ Supabase Database: CONNECTED")
+    except Exception as e:
+        print(f"⚠️ Supabase connection failed: {e}")
+        supabase = None
+else:
+    print("⚠️ Supabase: NOT CONFIGURED - running in demo mode")
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
@@ -1135,4 +1144,5 @@ if __name__ == '__main__':
     print("🌐 Сервер запущен: http://127.0.0.1:5000")
     print("=" * 60)
     
+
     app.run(debug=True, host='0.0.0.0', port=5000)
