@@ -103,7 +103,8 @@
             googleSignIn.addEventListener('click', function (e) {
                 createRipple(e);
                 setTimeout(() => {
-                    window.location.href = 'http://127.0.0.1:5000/auth/google';
+                    // ИСПРАВЛЕНО: используем относительный путь для Render
+                    window.location.href = '/auth/google';
                 }, 400);
             });
 
