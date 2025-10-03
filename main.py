@@ -11,7 +11,6 @@ from flask import Flask, redirect, request, session, url_for, jsonify, send_from
 
 app = Flask(__name__)
 
-# ==================== ВСТРОЕННЫЕ НАСТРОЙКИ ====================
 # Supabase Configuration
 SUPABASE_URL = "https://gqitmhktxmktggjlkjfa.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxaXRtaGt0eG1rdGdnamxramZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzODc4OTYsImV4cCI6MjA3NDk2Mzg5Nn0.oeQuzD2aBDkCROi5Dn2sN0FsziHvgZRvjEz2_TynAkY"
@@ -19,9 +18,8 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 # Flask Secret Key
 app.secret_key = "4f7d9a2b8c1e6f3a9d2b5c8e1f7a3d6b9c2e5f8a1d4b7c0e3f6a9d2b5c8e1f7a"
 
-# Google OAuth Configuration
 GOOGLE_CLIENT_ID = "268307319121-96e0bh135ic94v10mv0q1c4m6nofhu75.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_CLIENT_SECRET = "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" 
 # ==============================================================
 
 # Инициализируем Supabase только если переменные установлены
@@ -1173,6 +1171,7 @@ if __name__ == '__main__':
     
 
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
 
 
