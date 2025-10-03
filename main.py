@@ -605,7 +605,12 @@ def rate_limit(func):
     return wrapper
 
 def get_google_auth_url(state):
-    redirect_uri = 'http://127.0.0.1:5000/auth/google/callback'
+    # Используем текущий хост для redirect_uri
+    if request.host_url:
+        redirect_uri = f"{request.host_url}auth/google/callback"
+    else:
+        # Fallback для Render
+        redirect_uri = "https://onion-web-root.onrender.com/auth/google/callback"
     
     base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     params = {
@@ -620,7 +625,6 @@ def get_google_auth_url(state):
     
     param_string = "&".join([f"{k}={v}" for k, v in params.items()])
     return f"{base_url}?{param_string}"
-
 def save_user_to_supabase(user_info, request):
     try:
         user_ip = request.remote_addr
@@ -1164,4 +1168,5 @@ if __name__ == '__main__':
     
 
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
