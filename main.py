@@ -8,16 +8,23 @@ import uuid
 import csv
 from datetime import datetime
 from flask import Flask, redirect, request, session, url_for, jsonify, send_from_directory
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
-SUPABASE_URL = os.environ.get('SUPABASE_URL')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+# ==================== ВСТРОЕННЫЕ НАСТРОЙКИ ====================
+# Supabase Configuration
+SUPABASE_URL = "https://gqitmhktxmktggjlkjfa.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxaXRtaGt0eG1rdGdnamxramZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzODc4OTYsImV4cCI6MjA3NDk2Mzg5Nn0.oeQuzD2aBDkCROi5Dn2sN0FsziHvgZRvjEz2_TynAkY"
 
+# Flask Secret Key
+app.secret_key = "4f7d9a2b8c1e6f3a9d2b5c8e1f7a3d6b9c2e5f8a1d4b7c0e3f6a9d2b5c8e1f7a"
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID = "268307319121-7g99okbmiuqmu0hgre55k8t6n5s7l2t4.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "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"
+# ==============================================================
+
+# Инициализируем Supabase только если переменные установлены
 supabase = None
 if SUPABASE_URL and SUPABASE_KEY:
     try:
@@ -29,9 +36,6 @@ if SUPABASE_URL and SUPABASE_KEY:
         supabase = None
 else:
     print("⚠️ Supabase: NOT CONFIGURED - running in demo mode")
-
-GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 # Константы для поиска
 BASE_CSV = 'base.csv'
@@ -1169,6 +1173,7 @@ if __name__ == '__main__':
     
 
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
 
 
